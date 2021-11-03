@@ -164,7 +164,69 @@ def query_submissions(
     metadata: bool = False,
     with_comments: bool = True,
 ) -> Generator[Submission, None, None]:
+    """[summary]
+
+    Parameters
+    ----------
+    q : str, optional
+        Searches for these terms (ALL possible fields), by default None
+    q_not : str, optional
+        Excludes these search terms (ALL possible fields), by default None
+    ids : List[str], optional
+        Gets specific submissions by their IDs, by default None
+    title : str, optional
+        Searches the title field only, by default None
+    title_not : str, optional
+        Excludes submissions with these terms in the title, by default None
+    selftext : str, optional
+        Searches selftext field only, by default None
+    selftext_not : str, optional
+        Excludes submissions with these terms in the selftext, by default None
+    size : int, optional
+        Number of results to return, by default 25
+    fields : Union[str, List[str]], optional
+        One return specific fields (csv), by default None
+    sort : Literal[, optional
+        Sort results in a specific order, by default "asc"
+    sort_type : Literal[, optional
+        Sort by a specific attribute, by default "created_utc"
+    aggs : Literal[, optional
+        Return aggregation summary, by default None
+    author : str, optional
+        Restrict to a specific author, by default None
+    subreddit : str, optional
+        Restrict to a specific subreddit, by default None
+    after : datetime, optional
+        Return results after this date, by default None
+    before : datetime, optional
+        Return results before this date, by default None
+    score : str, optional
+        Restrict results based on score, by default None
+    frequency : Literal[, optional
+        Used with aggs parameter when set to "created_utc", by default None
+    metadata : bool, optional
+        Returns metadata about the query, by default False
+    with_comments : bool, optional
+        If True, additionally queries and returns comments under the given
+        post, by default True
+
+    Yields
+    -------
+    Generator[Submission, None, None]
+        [description]
+
+    Raises
+    ------
+    ConnectionRefusedError
+        [description]
+    ValueError
+        [description]
+    """
+    # if no `before` argument, use the current time; this gives us a definite
+    # starting state for the machine, allowing us to "move backwards" from
+    # now to `after` (very useful for when requests are refused).
     before = int(datetime.utcnow().timestamp()) if not before else before
+    # format the passed parameters into a string
     formatted_params: List[str] = list(
         filter(
             lambda l: l,

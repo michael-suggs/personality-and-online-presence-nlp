@@ -61,6 +61,7 @@ class MBTISample(TextSample):
     """
 
     mbti: MBTI
+    uid: str = None
 
 
 @dataclass
